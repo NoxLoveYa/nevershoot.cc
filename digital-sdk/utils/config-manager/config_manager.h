@@ -7,7 +7,9 @@ public:
 	struct legit_t
 	{
 		bool m_enabled{};
+		int m_hitboxes{};
 		bool m_auto_fire{};
+		bool m_ignore_unscoped{};
 		bool m_auto_scope{};
 		bool m_silent{};
 
@@ -31,17 +33,6 @@ public:
 	struct anti_aim_t
 	{
 		bool m_enabled{};
-		bool m_desync{};
-		bool m_fake_lags{};
-
-		int m_desync_right_range{ 58 };
-		int m_desync_left_range{ 58 };
-
-		int m_fake_lags_factor{};
-		int m_pitch_mode{};
-		int m_desync_mode{};
-
-		key_bind_t m_inverter = key_bind_t();
 	}m_anti_aim{};
 
 	struct esp_t
@@ -52,6 +43,7 @@ public:
 			bool m_box{};
 			bool m_health_bar{};
 			bool m_health_text{};
+			bool m_weapon_text{};
 			bool m_chams{};
 			bool m_invisible_chams{};
 		}m_player[4]{};

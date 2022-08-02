@@ -86,7 +86,7 @@ void player_esp::draw()
 		render_box(bbox, entity);
 		render_name(bbox, entity);
 		render_health_bar(bbox, entity);
-		//render_weapon(bbox, entity);
+		render_weapon(bbox, entity);
 	}
 }
 
@@ -146,8 +146,11 @@ void player_esp::render_weapon(const RECT bbox, c_base_player* player)
 	if (!weapon_data)
 		return;
 
-	const std::string name = weapon_data->m_weapon_name;
+	std::string name = weapon_data->m_weapon_name;
+	name = name.substr(7, name.size() - 7);
 
-	render::text(render::fonts::m_esp, ImVec2(bbox.left + (bbox.right - bbox.left) * 0.5f, bbox.bottom + 10),
-		name, c_color::white, true);
+	if (g_cfg.m_esp.m_player[m_type].m_weapon_text) {
+		render::text(render::fonts::m_esp, ImVec2(bbox.left + (bbox.right - bbox.left) * 0.5f, bbox.bottom + 10),
+			name, c_color::white, true);
+	}
 }

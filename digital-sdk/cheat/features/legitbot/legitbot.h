@@ -28,3 +28,4 @@ namespace legit_bot
 	void rcs();
 	void aimbot(c_weapon* active_weapon);
 };
+

@@ -1,4 +1,5 @@
 #include "../hooks.h"
+#include "../../features/misc/log-system/logs.h"
 
 void __stdcall hooks::hk_create_move(int sequence, float frame_time, bool is_active, bool& send_packet)
 {
@@ -18,9 +19,11 @@ void __stdcall hooks::hk_create_move(int sequence, float frame_time, bool is_act
 	movement::bunny_hop();
 
 	engine_prediction::setup();
+	
 	engine_prediction::begin();
 	{
 		legit_bot::init();
+		anti_aim::init();
 	}
 	engine_prediction::end();
 

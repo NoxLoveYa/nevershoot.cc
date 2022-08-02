@@ -28,6 +28,7 @@ namespace anti_aim
 	inline int m_manual_side{};
 	void init();
 	static void pitch();
+	static void roll();
 	void yaw();
 	static bool cant_work();
 }

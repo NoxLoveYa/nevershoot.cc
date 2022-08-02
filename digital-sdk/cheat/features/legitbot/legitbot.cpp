@@ -29,7 +29,6 @@ void legit_bot::aimbot(c_weapon* active_weapon)
 		if (!entity || !entity->is_alive() || entity->is_dormant()
 			|| entity->get_team() == ctx::local()->get_team())
 			continue;
-
 		for (const auto hitbox :
 			{
 				 hitbox_head,
@@ -59,7 +58,7 @@ void legit_bot::aimbot(c_weapon* active_weapon)
 			if (!trace.is_visible())
 				continue;
 
-			if (g_cfg.m_legit.m_auto_fire)
+			if (g_cfg.m_legit.m_auto_fire && !(ctx::packet_data::m_cmd->m_buttons & in_attack2))
 				ctx::packet_data::m_cmd->m_buttons |= in_attack;
 
 			const auto enemy_angle_x = (hitbox_pos - shoot_pos).to_angle().x - ctx::packet_data::m_cmd->m_view_angles.x + ctx::local()->get_aim_punch_angle().x;
@@ -78,6 +77,6 @@ void legit_bot::aimbot(c_weapon* active_weapon)
 	const auto smooth = g_cfg.m_legit.m_silent ? 1 : g_cfg.m_legit.m_smooth;
 	ctx::packet_data::m_cmd->m_view_angles += best_angle / static_cast<float>(smooth);
 
-	if (!g_cfg.m_legit.m_silent)
+	if (!g_cfg.m_legit.m_silent && ctx::packet_data::m_cmd->m_buttons & in_attack)
 		interfaces::m_engine->set_view_angles(ctx::packet_data::m_cmd->m_view_angles);
 }

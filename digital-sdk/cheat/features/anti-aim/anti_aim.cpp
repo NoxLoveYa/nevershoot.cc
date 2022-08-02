@@ -1,16 +1,22 @@
 #include "anti_aim.h"
+#include "../misc/log-system/logs.h"
 
 void anti_aim::init()
 {
-	if (cant_work())
+
+	const bool should_run = !cant_work();
+
+	if (!should_run)
 		return;
 
 	pitch();
 	yaw();
+	roll();
 }
 
 bool anti_aim::cant_work()
-{
+{	
+
 	if (!g_cfg.m_anti_aim.m_enabled)
 		return true;
 
@@ -39,9 +45,6 @@ bool anti_aim::cant_work()
 	if (ctx::packet_data::m_cmd->m_buttons & in_use)
 		return true;
 
-	if (ctx::local()->is_defusing())
-		return true;
-
 	if (ctx::local()->get_active_weapon()->get_throw_time())
 		return true;
 
@@ -52,39 +55,33 @@ void anti_aim::pitch()
 {
 	float modifier_value{};
 
-	switch (g_cfg.m_anti_aim.m_pitch_mode)
-	{
-	case e_pitch_mode::down:
-	{ modifier_value = 89.0f; } break;
-	case e_pitch_mode::up:
-	{ modifier_value = -89.0f; } break;
-	default: break;
-	}
+	modifier_value = 85.f;
 
 	ctx::packet_data::m_cmd->m_view_angles.x = modifier_value;
 }
 
 void anti_aim::yaw()
 {
-	if (ctx::packet_data::m_send_packet)
-		m_desync_side = utils::is_bind_active(g_cfg.m_anti_aim.m_inverter) ? e_desync_side::left : e_desync_side::right;
+	ctx::packet_data::m_send_packet = ctx::packet_data::m_cmd->m_command % 2;
 
 	ctx::packet_data::m_cmd->m_view_angles.y = math::normalize_yaw(ctx::packet_data::m_cmd->m_view_angles.y + 180.0f);
 
+	const float desync_amount = 58.f;
+
 	if (!ctx::packet_data::m_send_packet)
 	{
-		float desync_amount = 0.f;
-		switch (g_cfg.m_anti_aim.m_desync_mode)
-		{
-		case e_desync_mode::custom:
-		{
-			desync_amount = static_cast<float>((m_desync_side > 0
-				? g_cfg.m_anti_aim.m_desync_right_range
-				: g_cfg.m_anti_aim.m_desync_left_range));
-		}
-		default: break;
-		}
-
 		ctx::packet_data::m_cmd->m_view_angles.y += desync_amount;
+	}
+}
+
+void anti_aim::roll()
+{
+	ctx::packet_data::m_cmd->m_view_angles.z = 0;
+
+	const float desync_amount = 58.f;
+
+	if (!ctx::packet_data::m_send_packet)
+	{
+		ctx::packet_data::m_cmd->m_view_angles.z += desync_amount;
 	}
 }

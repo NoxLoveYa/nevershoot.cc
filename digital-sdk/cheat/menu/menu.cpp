@@ -1,6 +1,6 @@
 #include "menu.h"
 #include <cmath>
-
+#include "../features/legitbot/legitbot.h"
 bool menu::init_style() noexcept
 {
 	auto& io{ ImGui::GetIO() };
@@ -119,6 +119,7 @@ void menu::legit_tab()
 
 	ImGui::Checkbox(_("Enable legitbot"), &g_cfg.m_legit.m_enabled);
 	ImGui::Checkbox(_("Auto fire"), &g_cfg.m_legit.m_auto_fire);
+	ImGui::Checkbox(_("wait for zoom"), &g_cfg.m_legit.m_ignore_unscoped);
 	ImGui::Checkbox(_("Silent aim"), &g_cfg.m_legit.m_silent);
 
 	ImGui::SliderInt(_("Smooth"), &g_cfg.m_legit.m_smooth, 1, 100);
@@ -127,7 +128,10 @@ void menu::legit_tab()
 
 void menu::antiaim_tab()
 {
-
+	ImGui::Text("Anti-aim settings");
+	ImGui::Separator();
+	ImColor::ImColor(0, 0, 0, 255);
+	ImGui::Checkbox(_("Enable Anti-Aim"), &g_cfg.m_anti_aim.m_enabled);
 }
 
 void menu::world_esp_tab()
@@ -144,6 +148,7 @@ void menu::player_esp_tab()
 	ImGui::Checkbox(_("Box"), &g_cfg.m_esp.m_player[1].m_box);
 	ImGui::Checkbox(_("Health bar"), &g_cfg.m_esp.m_player[1].m_health_bar);
 	ImGui::Checkbox(_("Health text"), &g_cfg.m_esp.m_player[1].m_health_text);
+	ImGui::Checkbox(_("Weapon text"), &g_cfg.m_esp.m_player[1].m_weapon_text);
 	ImGui::Checkbox(_("Chams"), &g_cfg.m_esp.m_player[1].m_chams);
 	ImGui::Checkbox(_("Invisible chams"), &g_cfg.m_esp.m_player[1].m_invisible_chams);
 }
